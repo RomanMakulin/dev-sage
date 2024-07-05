@@ -1,10 +1,6 @@
-package com.makulin.config;
+package com.makulin.security;
 
-import com.makulin.security.JwtTokenFilter;
-import com.makulin.security.JwtTokenProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.*;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
