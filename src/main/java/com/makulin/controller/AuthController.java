@@ -24,8 +24,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody User user) {
-        return null; //TODO
+    public ResponseEntity<String> login(@RequestBody User user) {
+        return userService.login(user);
     }
 
 }
