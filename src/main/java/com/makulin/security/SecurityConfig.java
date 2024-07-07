@@ -1,6 +1,7 @@
 package com.makulin.security;
 
-import com.makulin.service.UserDetailsServiceImpl;
+import com.makulin.service.auth.UserDetailsServiceImpl;
+import com.makulin.service.token.TokenService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,25 +25,28 @@ public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
 
+    private final TokenService tokenService;
+
     public SecurityConfig(JwtTokenProvider jwtTokenProvider,
-                          UserDetailsServiceImpl userDetailsService) {
+                          UserDetailsServiceImpl userDetailsService, TokenService tokenService) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.userDetailsService = userDetailsService;
+        this.tokenService = tokenService;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF protection
+        http.csrf(AbstractHttpConfigurer::disable) // Disable CSRF protection using new method
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/auth/**").permitAll() // Allow access to authentication endpoints
+                                .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/test").authenticated()
                                 .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtTokenFilter(jwtTokenProvider, tokenService), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

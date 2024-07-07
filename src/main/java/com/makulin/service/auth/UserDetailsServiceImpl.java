@@ -1,4 +1,4 @@
-package com.makulin.service;
+package com.makulin.service.auth;
 
 import com.makulin.model.User;
 import com.makulin.repository.UserRepository;
